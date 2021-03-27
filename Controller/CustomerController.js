@@ -53,7 +53,7 @@ class CustomerController{
                 email,
                 password
             } = req.body;
-            
+            console.log(req.body);
             const userAccount = await querryBuilder("Customer").where("mail",email).select().first();
             
             const user = (JSON.parse(JSON.stringify(userAccount)));
