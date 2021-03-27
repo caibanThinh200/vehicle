@@ -16,7 +16,7 @@ class CustomerController{
             cmnd,
             password
         } = req.body
-        
+        console.log(req.body);
         const userInsert = {
             idUser:uuid.v4(),
             fullname,
