@@ -2,6 +2,8 @@ const app = require("express")();
 const bodyParser = require("body-parser")
 //middleware
 require('dotenv').config()
+const cors = require("cors");
+app.use(cors());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
