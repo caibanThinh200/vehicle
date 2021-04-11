@@ -1,10 +1,10 @@
 const querry = require("../Config/Database")
 const uuid = require("uuid");
 
-class VehicleController{
-    static async addVehicleController(req,res,next){
-        try{
-            const{
+class VehicleController {
+    static async addVehicleController(req, res, next) {
+        try {
+            const {
                 name,
                 quantity,
                 price,
@@ -14,7 +14,7 @@ class VehicleController{
                 idManufactor
             } = req.body
             const dataInsert = {
-                idVehicle:uuid.v4(),
+                idVehicle: uuid.v4(),
                 name,
                 quantity,
                 price,
@@ -23,137 +23,136 @@ class VehicleController{
             }
             await querry("Vehicle").insert(dataInsert)
             res.status(200).json({
-                status:"SUCCESS",
-                error:null,
-                result:"Add success"
+                status: "SUCCESS",
+                error: null,
+                result: "Add success"
             })
-            }
-        catch(e){
+        }
+        catch (e) {
             console.log(e)
             res.status(400).json({
-                status:"FAILED",
-                error:{
-                    code:1000,
-                    message:"Insert failed"
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "Insert failed"
                 },
-                result:null
+                result: null
             })
         }
     }
-    static async getProductController(req,res,next){
-        try{
+    static async getProductController(req, res, next) {
+        try {
             const data = await querry("Vehicle").select();
             res.status(200).json({
-                status:"SUCCESS",
-                error:null,
+                status: "SUCCESS",
+                error: null,
                 data
             })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             res.status(400).json({
-                status:"FAILED",
-                error:{
-                    code:1000,
-                    message:"getproduct failed"
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "getproduct failed"
                 },
-                result:null
+                result: null
             })
         }
     }
-    static async paginatingProductController(req,res,next){
-        try{
-            const {page} = req.params;
+    static async paginatingProductController(req, res, next) {
+        try {
+            const { page } = req.params;
             const product = 12;
-            let startIndex = (page - 1)*product;
+            let startIndex = (page - 1) * product;
             let endIndex = page * product;
             const productList = await querry("Vehicle").select();
-            const list = productList.slice(startIndex,endIndex);
+            const list = productList.slice(startIndex, endIndex);
             res.status(200).json({
-                status:"SUCCESS",
-                error:null,
-                data:list
+                status: "SUCCESS",
+                error: null,
+                data: list
             })
         }
-        catch(e){
+        catch (e) {
             res.status(400).json({
-                status:"FAILED",
-                error:{
-                    code:1000,
-                    message:"paginating failed"
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "paginating failed"
                 },
-                result:null
+                result: null
             })
         }
     }
-    static async getProductByIdController(req,res,next){
-        try{
-            const {id} = req.params;
-            const product = await querry("Vehicle").where("idVehicle",id).select().first()
+    static async getProductByIdController(req, res, next) {
+        try {
+            const { id } = req.params;
+            const product = await querry("Vehicle").where("idVehicle", id).select().first()
             res.status(200).json({
-                status:"SUCCESS",
-                error:null,
-                data:product
+                status: "SUCCESS",
+                error: null,
+                data: product
             })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             res.status(400).json({
-                status:"FAILED",
-                error:{
-                    code:1000,
-                    message:"get product failed"
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "get product failed"
                 },
-                result:null
+                result: null
             })
         }
     }
-    static async deleteController(req,res,next){
-        try{
-            const {id} = req.params;
-            await querry("Vehicle").where("idVehicle",id).del();
+    static async deleteController(req, res, next) {
+        try {
+            const { id } = req.params;
+            await querry("Vehicle").where("idVehicle", id).del();
             res.status(200).json({
-                status:"SUCCESS",
-                error:null,
-                result:"Deleted"
+                status: "SUCCESS",
+                error: null,
+                result: "Deleted"
             })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             res.status(400).json({
-                status:"FAILED",
-                error:{
-                    code:1000,
-                    message:"delete product failed"
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "delete product failed"
                 },
-                result:null
+                result: null
             })
         }
     }
-    static async updateProductController(req,res,next){
-        try{
-            const {id} = req.params;
-            const{name,quantity,price,idCategory,idManufactor} = req.body;
-            await querry("Vehicle").where("idVehicle",id).update({name,quantity,price,idCategory,idManufactor});
+    static async updateProductController(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { name, quantity, price, idCategory, idManufactor } = req.body;
+            await querry("Vehicle").where("idVehicle", id).update({ name, quantity, price, idCategory, idManufactor });
             res.status(200).json({
-                status:"SUCCESS",
-                error:null,
-                result:"Updated"
+                status: "SUCCESS",
+                error: null,
+                result: "Updated"
             })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             res.status(400).json({
-                status:"FAILED",
-                error:{
-                    code:1000,
-                    message:"update product failed"
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "update product failed"
                 },
-                result:null
+                result: null
             })
         }
     }
 }
-module.exports = VehicleController       
+module.exports = VehicleController
 
-       
