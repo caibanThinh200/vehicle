@@ -29,7 +29,7 @@ class CategoryController {
     }
     static async getCategoryController(req, res, next) {
         try {
-            const data = await querry("Category").select();
+            const data = await querryBuilder("Category").select();
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
