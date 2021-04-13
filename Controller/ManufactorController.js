@@ -28,13 +28,33 @@ class ManufactorController {
             })
         }
     }
+    static async getManufactorsController(req,res,next){
+        try{
+            const manufactors = await querryBuilder("Manufactor").select();
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                data:manufactors
+            })
+        }catch(e){
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "Get manufactors failed"
+                },
+                result: null
+            })
+        }
+    }
     static async paginatingManufactorController(req, res, next) {
         try {
             const { page } = req.params;
             const manufactor = 12;
             let startIndex = (page - 1) * manufactor;
             let endIndex = page * manufactor;
-            const ManufactorList = await querry("Manufactor").select();
+            const manufactorList = await querry("Manufactor").select();
             const list = manufactorList.slice(startIndex, endIndex);
             res.status(200).json({
                 status: "SUCCESS",
@@ -56,11 +76,11 @@ class ManufactorController {
     static async getManufactorByIdController(req, res, next) {
         try {
             const { id } = req.params;
-            const manufactor = await querry("Manufactor").where("idManufactor", id).select().first()
+            const manufactor = await querryBuilder("Manufactor").where("idManufactor", id).select().first()
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
-                data: product
+                data: manufactor
             })
         }
         catch (e) {
