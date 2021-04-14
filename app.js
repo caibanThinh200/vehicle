@@ -15,11 +15,13 @@ const vehicleRouter = require("./Route/Vehicle");
 const customerRouter = require("./Route/Customer");
 const manufactorRouter = require("./Route/Manufactor");
 const categoryRouter = require("./Route/Category");
+const cityRoute = require("./Route/City");
 
 app.use("/customer", customerRouter);
 app.use("/vehicle", vehicleRouter);
 app.use("/manufactor", manufactorRouter);
 app.use("/cate", categoryRouter);
+app.use("/city", cityRoute);
 
 //API invalid
 app.get("*", (req, res) => {

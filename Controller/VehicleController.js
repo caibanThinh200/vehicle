@@ -153,6 +153,52 @@ class VehicleController {
             })
         }
     }
+    static async addAvailableVehicle(req, res, next) {
+        try {
+            const { idVehicle, idCity } = req.body;
+            const insertData = {
+                idVehicle,
+                idCity
+            }
+            await querry("AvailableVehicle").insert(insertData);
+            res.json({
+                status: "SUCCESS",
+                error: null,
+                result: "Add vehicle success"
+            })
+        } catch (e) {
+            console.log(e);
+            res.json({
+                status: "FAILED",
+                err: {
+                    code: 1000,
+                    message: "Add vehicle failed"
+                },
+                result: null
+            });
+        }
+    }
+    static async getAvailableVehicle(req, res, next) {
+        try {
+            const { idCity } = req.body;
+            const cities = await querry("AvailableVehicle").where("idCity", idCity).select();
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                cities
+            })
+        } catch (e) {
+            console.log(e);
+            res.json({
+                status: "FAILED",
+                err: {
+                    code: 1000,
+                    message: "Get vehicle failed"
+                },
+                result: null
+            });
+        }
+    }
 }
 module.exports = VehicleController
 
