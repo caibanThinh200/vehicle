@@ -42,7 +42,7 @@ class VehicleController {
     }
     static async getProductController(req, res, next) {
         try {
-            const data = await querry("Vehicle").select().orderBy("created-at","desc");
+            const data = await querry("Vehicle").select().orderBy("created_at","desc");
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
