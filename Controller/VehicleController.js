@@ -181,11 +181,11 @@ class VehicleController {
     static async getAvailableVehicle(req, res, next) {
         try {
             const { idCity } = req.body;
-            const cities = await querry("AvailableVehicle").where("idCity", idCity).select();
+            const vehicles = await querry("AvailableVehicle").where("idCity", idCity).select();
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
-                cities
+                vehicles
             })
         } catch (e) {
             console.log(e);
