@@ -55,7 +55,7 @@ class VehicleController {
                 status: "FAILED",
                 error: {
                     code: 1000,
-                    message: "getproduct failed"
+                    message: "get product failed"
                 },
                 result: null
             })
