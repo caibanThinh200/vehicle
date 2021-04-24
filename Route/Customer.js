@@ -1,7 +1,7 @@
 const route = require("express").Router();
 const CustomerController = require('../Controller/CustomerController');
-const UserAuth = require("../Middleware/UserAuth");
-route.post("/", UserAuth, CustomerController.RegisterController);
+const UserValidation = require("../Middleware/UserAuth");
+route.post("/", UserValidation, CustomerController.RegisterController);
 route.post("/login", CustomerController.LoginController);
 route.get("/:id", CustomerController.GetUserByIdController);
 route.get("/user/info", CustomerController.GetUserByTokenController);

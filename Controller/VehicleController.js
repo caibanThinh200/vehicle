@@ -134,7 +134,19 @@ class VehicleController {
         try {
             const { id } = req.params;
             const { name, quantity, price, idCategory, idManufactor } = req.body;
-            await querry("Vehicle").where("idVehicle", id).update({ name, quantity, price, idCategory, idManufactor });
+            const filename = req.file ? req.file.filename : "";
+            const car = JSON.parse(JSON.stringify(await querry("Vehicle").where("idVehicle", id).select().first()));
+            const updateCar = {
+                name,
+                quantity,
+                price,
+                idCategory: idCategory === "" ? car.idCategory : idCategory,
+                idManufactor: idManufactor === "" ? car.idManufactor : idManufactor,
+                image: filename,
+                created_at: new Date
+            }
+            console.log(updateCar);
+            await querry("Vehicle").where("idVehicle", id).update(updateCar);
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
@@ -148,6 +160,156 @@ class VehicleController {
                 error: {
                     code: 1000,
                     message: "update product failed"
+                },
+                result: null
+            })
+        }
+    }
+    static async addVehicleDescriptionsController(req, res, next) {
+        try {
+            const { idVehicle } = req.params;
+            const { description } = req.body;
+            const insertDescription = {
+                id: uuid.v4(),
+                idVehicle,
+                description,
+                created_at: new Date
+            }
+            await querry("VehicleDetail").insert(insertDescription);
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                result: "Description added"
+            })
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "added description failed"
+                },
+                result: null
+            })
+        }
+    }
+    static async getVehicleDescriptionController(req, res, next) {
+        try {
+            const { idVehicle } = req.params;
+            const descriptions = await querry("VehicleDetail").where("idVehicle", idVehicle).select();
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                descriptions
+            })
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "get description failed"
+                },
+                result: null
+            })
+        }
+    }
+    static async addVehicleImagesController(req, res, next) {
+        try {
+            const { idVehicle } = req.params;
+            const filename = req.file ? req.file.filename : ""
+            const insertImage = {
+                id: uuid.v4(),
+                idVehicle,
+                path: filename,
+                created_at: new Date
+            }
+            await querry("Images").insert(insertImage);
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                result: "Images added"
+            })
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "add images failed"
+                },
+                result: null
+            })
+        }
+    }
+    static async getVehicleImagesController(req, res, next) {
+        try {
+            const { idVehicle } = req.params;
+            const images = await querry("Images").where("idVehicle", idVehicle).select();
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                images
+            })
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "get images failed"
+                },
+                result: null
+            })
+        }
+    }
+    static async addAvailableCarInCity(req, res, next) {
+        try {
+            const { idCity, idVehicle } = req.body;
+            const insertVehicle = {
+                idCity,
+                idVehicle
+            }
+            await querry("AvailableVehicle").insert(insertVehicle);
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                result: "Vehicle added"
+            })
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "add vehicle failed"
+                },
+                result: null
+            })
+        }
+    }
+    static async getAvailableCarByCity(req, res, next) {
+        try {
+            const { idCity } = req.params;
+            const availableCar = await querry("AvailableVehicle").where("idCity", idCity).select();
+            const carIds = availableCar.map(async item => {
+                const carId = JSON.parse(JSON.stringify(item)).idVehicle;
+                const carInf = await querry("Vehicle").where("idVehicle", carId).select().first();
+                return carInf
+            });
+            const carInfs = JSON.parse(JSON.stringify(await Promise.all(carIds)));
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                carInfs
+            })
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "get vehicle failed"
                 },
                 result: null
             })
