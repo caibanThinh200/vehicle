@@ -127,10 +127,9 @@ class CustomerController {
                 phoneNum,
                 birth,
                 cmnd,
-                avatar,
             } = req.body;
+            const filename = req.file.filename ? req.file.filename : ''
             const idUser = req.params.id
-
             const updateData = {
                 "fullname": fullname,
                 "license": license,
@@ -138,7 +137,7 @@ class CustomerController {
                 "phoneNum": phoneNum,
                 "birth": birth,
                 "cmnd": cmnd,
-                "avatar": avatar
+                "avatar": filename
             }
 
             await querryBuilder("Customer").where("idUser", idUser).update(updateData);
