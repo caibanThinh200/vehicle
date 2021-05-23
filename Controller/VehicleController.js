@@ -4,7 +4,7 @@ const uuid = require("uuid");
 class VehicleController {
   static async addVehicleController(req, res, next) {
     try {
-      const { name, quantity, price, saled, count, idCategory, idManufactor } =
+      const { name, quantity, price, saled, count, idCategory, idManufactor , image} =
         req.body;
       const filename = req.file.filename ? req.file.filename : "";
       const dataInsert = {
@@ -14,7 +14,7 @@ class VehicleController {
         price: price || "",
         idCategory: idCategory || "",
         idManufactor: idManufactor || "",
-        avatar: filename,
+        avatar: image || ""
       };
       await querry("Vehicle").insert(dataInsert);
       res.status(200).json({
