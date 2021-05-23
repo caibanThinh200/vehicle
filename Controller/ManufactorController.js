@@ -54,7 +54,7 @@ class ManufactorController {
             const manufactor = 12;
             let startIndex = (page - 1) * manufactor;
             let endIndex = page * manufactor;
-            const manufactorList = await querry("Manufactor").select();
+            const manufactorList = await querryBuilder("Manufactor").select();
             const list = manufactorList.slice(startIndex, endIndex);
             res.status(200).json({
                 status: "SUCCESS",
@@ -98,7 +98,7 @@ class ManufactorController {
     static async deleteManufactorController(req, res, next) {
         try {
             const { id } = req.params;
-            await querry("Manufactor").where("idManufactor", id).del();
+            await querryBuilder("Manufactor").where("idManufactor", id).del();
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
@@ -121,7 +121,7 @@ class ManufactorController {
         try {
             const { id } = req.params;
             const { name } = req.body;
-            await querry("Manufactor").where("idManufactor", id).update({ name });
+            await querryBuilder("Manufactor").where("idManufactor", id).update({ name });
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
