@@ -6,7 +6,7 @@ class VehicleController {
     try {
       const { name, quantity, price, saled, count, idCategory, idManufactor , image} =
         req.body;
-      const filename = req.file.filename ? req.file.filename : "";
+      // const filename = req.file.filename ? req.file.filename : "";
       const dataInsert = {
         idVehicle: uuid.v4(),
         name: name || "",
@@ -14,7 +14,7 @@ class VehicleController {
         price: price || "",
         idCategory: idCategory || "",
         idManufactor: idManufactor || "",
-        avatar: image || ""
+        image: image || ""
       };
       await querry("Vehicle").insert(dataInsert);
       res.status(200).json({
@@ -133,23 +133,22 @@ class VehicleController {
   static async updateProductController(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, quantity, price, idCategory, idManufactor } = req.body;
-      const filename = req.file ? req.file.filename : "";
+      const { name, quantity, price, idCategory, idManufactor, image } = req.body;
+      // const filename = req.file ? req.file.filename : "";
       const car = JSON.parse(
         JSON.stringify(
           await querry("Vehicle").where("idVehicle", id).select().first()
         )
       );
       const updateCar = {
-        name,
-        quantity,
-        price,
-        idCategory: idCategory === "" ? car.idCategory : idCategory,
-        idManufactor: idManufactor === "" ? car.idManufactor : idManufactor,
-        image: filename,
+        name: !name  ? car.name : name,
+        quantity: !quantity  ? car.quantity : quantity,
+        price: !price  ? car.price : price,
+        idCategory: !idCategory  ? car.idCategory : idCategory,
+        idManufactor: !idManufactor ? car.idManufactor : idManufactor,
+        image: !image ? car.image : image,
         created_at: new Date(),
       };
-      console.log(updateCar);
       await querry("Vehicle").where("idVehicle", id).update(updateCar);
       res.status(200).json({
         status: "SUCCESS",

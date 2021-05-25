@@ -3,14 +3,13 @@ const UserAuth = require("../Middleware/UserAuth");
 const upload = require("../multer");
 const VehicleController = require("../Controller/VehicleController");
 
-route.post("/", upload.single("image"), VehicleController.addVehicleController);
+route.post("/", VehicleController.addVehicleController);
 route.get("/", VehicleController.getProductController);
 route.get("/:page", VehicleController.paginatingProductController);
 route.get("/detail/:id", VehicleController.getProductByIdController);
 route.delete("/:id", VehicleController.deleteController);
 route.put(
   "/:id",
-  upload.single("image"),
   VehicleController.updateProductController
 );
 route.post(
