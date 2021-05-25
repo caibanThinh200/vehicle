@@ -1,18 +1,25 @@
 const uuid = require("uuid");
 const querryBuilder = require("../Config/Database");
-class CategoryController {
-    static async addCategoryController(req, res, next) {
+class BillController {
+    static async addBillController(req, res, next) {
         try {
-            const { name } = req.body
+            const {
+                idUser,
+                total,
+                timeCount
+            } = req.body
             const dataInsert = {
-                idCategory: uuid.v4(),
-                nameCate: name
+                idBill: uuid.v4(),
+                idUser,
+                total,
+                timeCount,
+                created_at: new Date
             }
-            await querryBuilder("Category").insert(dataInsert);
+            await querryBuilder("Bill").insert(dataInsert);
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
-                result: "Add category success"
+                result: "Add bill success"
             })
         }
         catch (e) {
@@ -21,15 +28,15 @@ class CategoryController {
                 status: "FAILED",
                 error: {
                     code: 1000,
-                    message: "Add category failed"
+                    message: "Add bill failed"
                 },
                 result: null
             })
         }
     }
-    static async getCategoryController(req, res, next) {
+    static async getBillController(req, res, next) {
         try {
-            const data = await querryBuilder("Category").select();
+            const data = await querryBuilder("Bill").select();
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
@@ -42,20 +49,20 @@ class CategoryController {
                 status: "FAILED",
                 error: {
                     code: 1000,
-                    message: "get category failed"
+                    message: "get bill failed"
                 },
                 result: null
             })
         }
     }
-    static async paginatingCategoryController(req, res, next) {
+    static async paginatingBillController(req, res, next) {
         try {
             const { page } = req.params;
-            const category = 12;
-            let startIndex = (page - 1) * category;
-            let endIndex = page * category;
-            const categoryList = await querryBuilder("Category").select();
-            const list = categoryList.slice(startIndex, endIndex);
+            const bill = 12;
+            let startIndex = (page - 1) * bill;
+            let endIndex = page * bill;
+            const billList = await querryBuilder("Bill").select();
+            const list = billList.slice(startIndex, endIndex);
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
@@ -73,14 +80,14 @@ class CategoryController {
             })
         }
     }
-    static async getCategoryByIdController(req, res, next) {
+    static async getBillByIdController(req, res, next) {
         try {
             const { id } = req.params;
-            const product = await querryBuilder("Category").where("idCategory", id).select().first()
+            const bill = await querryBuilder("Bill").where("idBill", id).select().first()
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
-                data: product
+                data: bill
             })
         }
         catch (e) {
@@ -89,16 +96,16 @@ class CategoryController {
                 status: "FAILED",
                 error: {
                     code: 1000,
-                    message: "get category failed"
+                    message: "get bill failed"
                 },
                 result: null
             })
         }
     }
-    static async deleteCategoryController(req, res, next) {
+    static async deleteBillController(req, res, next) {
         try {
             const { id } = req.params;
-            await querryBuilder("Category").where("idCategory", id).del();
+            await querryBuilder("Bill").where("idBill", id).del();
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
@@ -111,34 +118,12 @@ class CategoryController {
                 status: "FAILED",
                 error: {
                     code: 1000,
-                    message: "delete category failed"
-                },
-                result: null
-            })
-        }
-    }
-    static async updateCategoryController(req, res, next) {
-        try {
-            const { id } = req.params;
-            const { name } = req.body;
-            await querryBuilder("Category").where("idCategory", id).update({ name });
-            res.status(200).json({
-                status: "SUCCESS",
-                error: null,
-                result: "Updated"
-            })
-        }
-        catch (e) {
-            console.log(e);
-            res.status(400).json({
-                status: "FAILED",
-                error: {
-                    code: 1000,
-                    message: "update category failed"
+                    message: "delete bill failed"
                 },
                 result: null
             })
         }
     }
 }
-module.exports = CategoryController;
+module.exports = BillController
+
