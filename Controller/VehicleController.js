@@ -85,10 +85,17 @@ class VehicleController {
         .where("idVehicle", id)
         .select()
         .first();
+      const parsedProduct = JSON.parse(JSON.stringify(product));
+      const {idCategory,idManufactor} = parsedProduct;
+      const cateName = await querry("Category").where("idCategory",idCategory).select("nameCate").first();
+      const manufactorName = await querry("Manufactor").where("idManufactor",idManufactor).select("name").first();
+      
       res.status(200).json({
         status: "SUCCESS",
         error: null,
         data: product,
+        cateName:cateName.nameCate,
+        manufactorName:manufactorName.name
       });
     } catch (e) {
       console.log(e);
