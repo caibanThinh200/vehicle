@@ -124,6 +124,42 @@ class BillController {
             })
         }
     }
+    static async addVehicleToBillController(req, res, next) {
+        try {
+            const {
+                idBill,
+                idVehicle
+            } = req.body
+            const dataInsert = {
+                idBillDetail: uuid.v4()
+            }
+            var vehicles = [],
+            for (let index = 0; index < vehicles.length; index++) {
+                const dataInsert = {
+                    idBill,
+                    idVehicle
+                }
+                await querryBuilder("BillDetail").insert(dataInsert);         
+            }
+            await querryBuilder("BillDetail").insert(dataInsert);
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                result: "Add bill detail success"
+            })
+        }
+        catch (e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "Add bill detail failed"
+                },
+                result: null
+            })
+        }
+    }
 }
 module.exports = BillController
 
