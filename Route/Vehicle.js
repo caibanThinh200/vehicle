@@ -8,12 +8,25 @@ route.get("/", VehicleController.getProductController);
 route.get("/:page", VehicleController.paginatingProductController);
 route.get("/detail/:id", VehicleController.getProductByIdController);
 route.delete("/:id", VehicleController.deleteController);
-route.put("/:id", upload.single("image"), VehicleController.updateProductController);
-route.post("/description/:idVehicle", VehicleController.addVehicleDescriptionsController);
-route.get("/description/:idVehicle", VehicleController.getVehicleDescriptionController);
+route.put(
+  "/:id",
+  VehicleController.updateProductController
+);
+route.post(
+  "/description/:idVehicle",
+  VehicleController.addVehicleDescriptionsController
+);
+route.get(
+  "/description/:idVehicle",
+  VehicleController.getVehicleDescriptionController
+);
 route.get("/image/:idVehicle", VehicleController.getVehicleImagesController);
-route.post("/image/:idVehicle", upload.single("image"), VehicleController.addVehicleImagesController);
-route.post("/available",VehicleController.addAvailableCarInCity);
-route.get("/available/:idCity",VehicleController.getAvailableCarByCity)
+route.post(
+  "/image/:idVehicle",
+  upload.single("image"),
+  VehicleController.addVehicleImagesController
+);
+route.post("/available", VehicleController.addAvailableCarInCity);
+route.get("/available/:idCity", VehicleController.getAvailableCarByCity);
 
 module.exports = route;
