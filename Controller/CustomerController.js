@@ -20,7 +20,7 @@ class CustomerController {
             const userInsert = {
                 idUser: uuid.v4(),
                 fullname,
-                license,
+                license: JSON.stringify(license),
                 mail,
                 phoneNum,
                 birth,
