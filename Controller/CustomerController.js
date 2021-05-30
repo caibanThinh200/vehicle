@@ -16,11 +16,12 @@ class CustomerController {
                 cmnd,
                 password
             } = req.body
+            const label = license.map(licenses => licenses.label)
             
             const userInsert = {
                 idUser: uuid.v4(),
                 fullname,
-                license: JSON.stringify(license),
+                license: JSON.stringify(label),
                 mail,
                 phoneNum,
                 birth,

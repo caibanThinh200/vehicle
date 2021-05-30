@@ -6,13 +6,11 @@ module.exports = async (req, res, next) => {
     try {
 
         const { fullname, license, mail, phoneNum, birth, avatar, cmnd, password, created_at } = req.body
-        console.log(req.body);
         if (!fullname) {
             res.status(400).json({
                 message: "Invalid fullname"
             })
         }
-
         if (!license) {
             res.status(400).json({
                 message: "Invalid license"
