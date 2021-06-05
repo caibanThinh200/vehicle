@@ -6,20 +6,32 @@ class BillController {
             const {
                 idUser,
                 total,
-                timeCount
+                startDate,
+                endDate,
+                listCar
             } = req.body
             const dataInsert = {
                 idBill: uuid.v4(),
                 idUser,
                 total,
-                timeCount,
+                startDate: new Date(startDate),
+                endDate: new Date(endDate),
                 created_at: new Date
             }
             await querryBuilder("Bill").insert(dataInsert);
+            if(listCar.length > 0) {
+                listCar.forEach(async car => {
+                    await querryBuilder("billdetail").insert({
+                        idVehicle: car.idVehicle,
+                        count: car.count, 
+                        idBill: dataInsert.idBill
+                    })
+                })
+            }
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
-                result: "Add bill success"
+                result: "Add bill success, here 's your id bill: " + dataInsert.idBill 
             })
         }
         catch (e) {
@@ -55,6 +67,29 @@ class BillController {
             })
         }
     }
+
+    static async getBillDetailController(req, res, next) {
+        try {
+            const { id } = req.params;
+            const listVehicle = await querryBuilder("billdetail").where("idBill", id).select("idVehicle");
+            const parsedListVehicle = JSON.parse(JSON.stringify(listVehicle));
+            const vehiclePromise = parsedListVehicle.map(async vehicle => {
+                return new Promise(async (reject,resolve) => {
+                    const vehicleData = await querryBuilder("billdetail").where("idVehicle", vehicle.idVehicle).select();
+                    resolve(vehicleData)
+                })
+            })
+            const vehicle = await Promise.all(vehiclePromise);
+            console.log(vehicle);
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                vehicle
+            })
+        } catch(e) {
+            console.log(e);
+        }
+    }
     static async paginatingBillController(req, res, next) {
         try {
             const { page } = req.params;
@@ -83,11 +118,18 @@ class BillController {
     static async getBillByIdController(req, res, next) {
         try {
             const { id } = req.params;
-            const bill = await querryBuilder("Bill").where("idBill", id).select().first()
+            const listVehicle = await querryBuilder("billdetail").where("idBill", id).select("idVehicle");
+            const parsedListVehicle = JSON.parse(JSON.stringify(listVehicle));
+            const vehiclePromise = parsedListVehicle.map(async vehicle => {
+                const vehicleData = await querryBuilder("vehicle").where("idVehicle", vehicle.idVehicle).select().first();
+                const parsedData = JSON.parse(JSON.stringify(vehicleData));
+                return parsedData;
+            })
+            const vehicle = await Promise.all(vehiclePromise);
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
-                data: bill
+                vehicle
             })
         }
         catch (e) {
