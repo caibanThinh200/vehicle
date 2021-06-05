@@ -8,13 +8,15 @@ class BillController {
                 total,
                 startDate,
                 endDate,
-                listCar
+                listCar,
+                place
             } = req.body
             const dataInsert = {
                 idBill: uuid.v4(),
                 idUser,
                 total,
                 status:"Delivering",
+                place,
                 startDate: new Date(startDate),
                 endDate: new Date(endDate),
                 created_at: new Date
