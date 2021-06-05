@@ -29,7 +29,7 @@ class CustomerController {
                 password: bcrypt.hashSync(password, 10),
                 created_at: new Date()
             }
-            console.log(daat)
+            
             await querryBuilder("Customer").insert(userInsert);
             res.status(200).json({
                 status: "SUCCESS",

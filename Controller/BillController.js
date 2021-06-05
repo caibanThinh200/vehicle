@@ -14,6 +14,7 @@ class BillController {
                 idBill: uuid.v4(),
                 idUser,
                 total,
+                status:"Delivering",
                 startDate: new Date(startDate),
                 endDate: new Date(endDate),
                 created_at: new Date
@@ -44,6 +45,59 @@ class BillController {
                 },
                 result: null
             })
+        }
+    }
+    static async alertDeleveringBill(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { startDate } = req.body;
+            const currentTime = new Date();
+            const deliveringTime = Math.round(new Date(startDate.replace(/-/g,'/')) - currentTime);
+            if (deliveringTime/ 1000 <= -100){
+                res.status(400).json({
+                    status: "SUCCESS",
+                    error: null,
+                    message: `Thời gian giao xe cho hóa đơn ${id} đã đi qua`
+                })
+            }
+
+            else if (deliveringTime/1000 <= 300) {
+                res.status(400).json({
+                    status: "SUCCESS",
+                    error: null,
+                    message: `Thời gian giao xe cho hóa đơn ${id} đã đến`
+                })
+            }
+
+            else if (deliveringTime/ 1000 >= 1000) {
+                res.status(400).json({
+                    status: "SUCCESS",
+                    error: null,
+                    message: `Thời gian giao xe cho hóa đơn ${id} vẫn chưa đến`
+                })
+            }
+        } catch(e) {    
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "Đã có lỗi xảy ra"
+                },
+                result: null
+            })
+        }
+    }
+
+    static async updateBillStatusController(req,res, next) {
+        try {
+            const { id } = req.params;
+            const updateStatus = {
+                status: "In progress"
+            }
+            await querryBuilder("bill").where("idBill",id).update(updateStatus);
+        } catch(e) {
+            console.log(e);
         }
     }
     static async getBillController(req, res, next) {
