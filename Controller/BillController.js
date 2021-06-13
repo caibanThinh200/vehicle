@@ -15,7 +15,7 @@ class BillController {
                 idBill: uuid.v4(),
                 idUser,
                 total,
-                status:"Delivering",
+                status: "Waiting for admin",
                 place: address,
                 startDate: new Date(startDate),
                 endDate: new Date(endDate),
@@ -34,7 +34,8 @@ class BillController {
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
-                result: "Add bill success, here 's your id bill: " + dataInsert.idBill 
+                message:"Add bill success",
+                result: dataInsert.idBill 
             })
         }
         catch (e) {
@@ -78,6 +79,85 @@ class BillController {
                     message: `Thời gian giao xe cho hóa đơn ${id} vẫn chưa đến`
                 })
             }
+        } catch(e) {    
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "Đã có lỗi xảy ra"
+                },
+                result: null
+            })
+        }
+    }
+
+    static async resolveEndTimeController(req, res, next) {
+        try {
+            const { endDate } = req.query;
+            const { id } = req.params;
+            const currentTime  = new Date;
+            const endTime = new Date(endDate);
+            if(Math.abs(currentTime >= endTime)) {
+                res.status(200).json({
+                    status: "SUCCESS",
+                    error: null,
+                    message: `Thời gian thuê xe của hóa đơn hóa đơn ${id} đã hoàn thành`
+                })
+            }
+            else {
+                res.status(200).json({
+                    status: "SUCCESS",
+                    error: null,
+                    message: `Thời gian thuê xe của hóa đơn hóa đơn ${id} vẫn chưa hoàn thành`
+                })
+            }
+        } catch(e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "Đã có lỗi xảy ra"
+                },
+                result: null
+            })
+        }
+    }
+
+    static async getBillByIdUserController(req, res, next) {
+        try {
+            const { idUser } = req.query;
+            const bill = await querryBuilder("bill").where("idUser",idUser).select();
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                message: `Trả xe thành công`,
+                bill
+            })
+        } catch(e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "Đã có lỗi xảy ra"
+                },
+                result: null
+            })
+        }
+    }
+
+    static async adminBillConfirmController(req, res, next) {
+        try {
+            const { status } = req.body;
+            const { id } = req.params;
+            await querryBuilder("bill").where("idBill", id).update({status});
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                message: "Cập nhật hóa đơn thành công"
+            })
         } catch(e) {    
             console.log(e);
             res.status(400).json({
@@ -136,7 +216,6 @@ class BillController {
                 })
             })
             const vehicle = await Promise.all(vehiclePromise);
-            console.log(vehicle);
             res.status(200).json({
                 status: "SUCCESS",
                 error: null,
