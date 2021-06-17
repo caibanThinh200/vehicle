@@ -14,7 +14,8 @@ class CustomerController {
                 phoneNum,
                 birth,
                 cmnd,
-                password
+                password,
+                role
             } = req.body
             const label = license.map(licenses => licenses.label)
             
@@ -26,6 +27,7 @@ class CustomerController {
                 phoneNum,
                 birth,
                 cmnd,
+                role,
                 password: bcrypt.hashSync(password, 10),
                 created_at: new Date()
             }
@@ -55,9 +57,10 @@ class CustomerController {
                 password
             } = req.body;
             const userAccount = await querryBuilder("Customer").where("mail", email).select().first();
-
+            
             const user = (JSON.parse(JSON.stringify(userAccount)));
-
+            console.log(user);
+            console.log(bcrypt.compareSync(password, user.password))
             const { idUser, fullname, license, mail, phoneNum, birth, avatar, cmnd, created_at } = user
             if (!user.mail || !bcrypt.compareSync(password, user.password)) {
                 res.status(200).json({
