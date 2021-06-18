@@ -13,5 +13,6 @@ route.put("/admin/confirm/:id",BillController.adminBillConfirmController);
 route.get("/endTime/:id", BillController.resolveEndTimeController);
 route.delete("/:id", BillController.deleteBillController);
 route.post("/KPI", BillController.AddNewMonthKPIController);
+route.get("/KPI", BillController.GetKPIOfYearByAdminController);
 
 module.exports = route

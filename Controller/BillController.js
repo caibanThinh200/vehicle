@@ -334,7 +334,7 @@ class BillController {
         }
     }
 
-    static async GetKPIOfYearByAdmin(req, res, next) {
+    static async GetKPIOfYearByAdminController(req, res, next) {
         try {
             const { year } = req.query;
             const data = await querryBuilder("KPI").where("year", year).select();
