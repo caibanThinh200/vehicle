@@ -4,7 +4,6 @@ const BillController = require("../Controller/BillController");
 route.post("/", BillController.addBillController);
 route.get("/",BillController.getBillController);
 route.get("/user", BillController.getBillByIdUserController);
-route.get("/:id", BillController.getBillByIdController);
 route.delete("/:id", BillController.deleteBillController);
 route.get("/:page", BillController.paginatingBillController);
 route.get("/alert/:id", BillController.alertDeleveringBill);
@@ -14,5 +13,6 @@ route.get("/endTime/:id", BillController.resolveEndTimeController);
 route.delete("/:id", BillController.deleteBillController);
 route.post("/KPI", BillController.AddNewMonthKPIController);
 route.get("/KPI", BillController.GetKPIOfYearByAdminController);
+route.get("/:id", BillController.getBillByIdController);
 
 module.exports = route
