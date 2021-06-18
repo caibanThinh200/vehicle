@@ -9,7 +9,8 @@ class BillController {
                 startDate,
                 endDate,
                 listCar,
-                address
+                address,
+                phoneNum
             } = req.body
             const dataInsert = {
                 idBill: uuid.v4(),
@@ -19,8 +20,10 @@ class BillController {
                 place: address,
                 startDate: new Date(startDate),
                 endDate: new Date(endDate),
+                phone:phoneNum || "",
                 created_at: new Date
             }
+            console.log(dataInsert)
             await querryBuilder("Bill").insert(dataInsert);
             if(listCar.length > 0) {
                 listCar.forEach(async car => {
