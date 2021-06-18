@@ -155,6 +155,33 @@ class BillController {
         try {
             const { status } = req.body;
             const { id } = req.params;
+            switch(status) {
+                case "In progress": {
+                    const car = await querryBuilder("billdetail").where("idBill",id).select("idVehicle","count");
+                    const parsedCar = JSON.parse(JSON.stringify(car));
+                    parsedCar.map(async car => {
+                        const carInfo = await querryBuilder("vehicle").where("idVehicle",car.idVehicle);
+                        const parsedCarInfo = JSON.parse(JSON.stringify(carInfo));
+                        const quantityUpdate = {
+                            quantity: parsedCarInfo[0].quantity - car.count
+                        }
+                        await querryBuilder("vehicle").where("idVehicle",car.idVehicle).update(quantityUpdate)
+                    })
+                }
+                case "Done": {
+                    const car = await querryBuilder("billdetail").where("idBill",id).select("idVehicle","count");
+                    const parsedCar = JSON.parse(JSON.stringify(car));
+                    parsedCar.map(async car => {
+                        const carInfo = await querryBuilder("vehicle").where("idVehicle",car.idVehicle);
+                        const parsedCarInfo = JSON.parse(JSON.stringify(carInfo));
+                        const quantityUpdate = {
+                            quantity: parsedCarInfo[0].quantity + car.count,
+                            saled: parsedCarInfo[0].saled + car.count
+                        }
+                        await querryBuilder("vehicle").where("idVehicle",car.idVehicle).update(quantityUpdate)
+                    })
+                }
+            }
             await querryBuilder("bill").where("idBill", id).update({status});
             res.status(200).json({
                 status: "SUCCESS",
