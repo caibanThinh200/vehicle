@@ -304,6 +304,57 @@ class BillController {
             })
         }
     }
+
+    static async AddNewMonthKPIController(req, res, next) {
+        try {
+            const { total, percentResult, month, year } = req.body;
+            const insertKPI = {
+                id: uuid.v4() || "",
+                total: total || 0,
+                result: percentResult || 0,
+                month: month || new Date().getMonth(),
+                year: year || new Date().getFullYear()
+            }
+            await querryBuilder("KPI").insert(insertKPI);
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                result: "KPI added"
+            })
+        } catch(e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "Add KPI failed"
+                },
+                result: null
+            })
+        }
+    }
+
+    static async GetKPIOfYearByAdmin(req, res, next) {
+        try {
+            const { year } = req.query;
+            const data = await querryBuilder("KPI").where("year", year).select();
+            res.status(200).json({
+                status: "SUCCESS",
+                error: null,
+                data
+            })
+        } catch(e) {
+            console.log(e);
+            res.status(400).json({
+                status: "FAILED",
+                error: {
+                    code: 1000,
+                    message: "Get KPI failed"
+                },
+                result: null
+            })
+        }
+    }
 }
 module.exports = BillController
 

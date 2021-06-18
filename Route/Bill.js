@@ -10,6 +10,8 @@ route.get("/:page", BillController.paginatingBillController);
 route.get("/alert/:id", BillController.alertDeleveringBill);
 route.put("/:id", BillController.updateBillStatusController);
 route.put("/admin/confirm/:id",BillController.adminBillConfirmController);
-route.get("/endTime/:id", BillController.resolveEndTimeController)
+route.get("/endTime/:id", BillController.resolveEndTimeController);
+route.delete("/:id", BillController.deleteBillController);
+route.post("/KPI", BillController.AddNewMonthKPIController);
 
 module.exports = route
