@@ -155,6 +155,7 @@ class BillController {
         try {
             const { status } = req.body;
             const { id } = req.params;
+            
             switch(status) {
                 case "In progress": {
                     const car = await querryBuilder("billdetail").where("idBill",id).select("idVehicle","count");
@@ -165,8 +166,10 @@ class BillController {
                         const quantityUpdate = {
                             quantity: parsedCarInfo[0].quantity - car.count
                         }
+                        console.log(quantityUpdate)
                         await querryBuilder("vehicle").where("idVehicle",car.idVehicle).update(quantityUpdate)
                     })
+                    break;
                 }
                 case "Done": {
                     const car = await querryBuilder("billdetail").where("idBill",id).select("idVehicle","count");
@@ -178,8 +181,10 @@ class BillController {
                             quantity: parsedCarInfo[0].quantity + car.count,
                             saled: parsedCarInfo[0].saled + car.count
                         }
+                        console.log(quantityUpdate)
                         await querryBuilder("vehicle").where("idVehicle",car.idVehicle).update(quantityUpdate)
                     })
+                    break;
                 }
             }
             await querryBuilder("bill").where("idBill", id).update({status});
